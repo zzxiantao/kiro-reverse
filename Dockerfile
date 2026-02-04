@@ -1,11 +1,11 @@
-# 基于官方 Alpine Linux 镜像（轻量，满足 Docker 语法要求）
-FROM alpine:latest
+# 直接基于 AIClient-2-API 官方镜像（核心：Render 会直接构建并运行这个镜像）
+FROM justlikemaki/aiclient-2-api:latest
 
-# 安装必要依赖（可选，确保容器内基础命令可用）
-RUN apk add --no-cache curl
-
-# 暴露端口（和 docker-compose.yml 中的 3000 端口对应）
+# 暴露容器内 3000 端口（Render 会自动映射到公网 HTTPS，无需手动端口映射）
 EXPOSE 3000
 
-# 容器启动命令（留空，由 docker-compose.yml 接管）
-CMD ["echo", "Kiro reverse API container started"]
+# 配置时区（可选，保持和之前一致）
+ENV TZ=Asia/Shanghai
+
+# 容器启动命令（直接启动 AIClient-2-API 服务，前台运行，让 Render 能检测到进程）
+CMD ["node", "src/index.js"]
